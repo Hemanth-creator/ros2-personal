@@ -7,16 +7,21 @@ services:
       dockerfile: Dockerfile
     container_name: ros2_dev_personal
     environment:
-      - DISPLAY=${DISPLAY}  # Forward X11 display
-      - QT_X11_NO_MITSHM=1  # Required for some GUI apps
+      # Automatically set DISPLAY for X11
+      - DISPLAY=${DISPLAY:-host.docker.internal:0.0}
+      - QT_X11_NO_MITSHM=1
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix  # X11 socket
-      - ./ros2_ws:/ros2_ws  # Mount workspace (optional)
-    network_mode: "host"  # Use host networking for Gazebo and ROS
+      - ./src:/home/ros2_ws/src       # Mount your workspace
+      # Linux-only X11 socket
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
     stdin_open: true
     tty: true
     command: bash
 
-    # Optional: If you want sound or GUI acceleration
+    # Optional: GPU acceleration (Linux)
     devices:
-      - /dev/dri:/dev/dri  # GPU acceleration (optional)
+      - /dev/dri:/dev/dri
+
+    # Extra options for cross-platform
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
