@@ -1,0 +1,40 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz (same as your previous setup)
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+ackermann_steering_controller:
+  ros__parameters:
+    type: 'ackermann_steering_controller/AckermannSteeringController'
+
+    # Vehicle geometry
+    wheelbase: 0.65                  # Distance between front and rear wheels
+    traction_track_width: 0.58        # Track width of rear wheels (single-wheel drive)
+    steering_track_width: 0.58        # Track width of steering wheels
+    traction_wheels_radius: 0.165    # Radius of rear traction wheels
+    steering_wheels_radius: 0.165    # Radius of front steering wheels
+
+    # Timeout & input
+    reference_timeout: 0.5           # Seconds to stop if no cmd_vel received
+    open_loop: false                  # Use hardware feedback, not open-loop
+    velocity_rolling_window_size: 10 # Rolling mean for odom speed filtering
+
+    # Frames & odometry
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: false             # Matches your old setup
+
+    # Covariances (for localization fusion)
+    twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+    pose_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
+
+    # Feedback mode
+    position_feedback: false          # Use speed feedback, not position
+    
+    # Joint names (for your tricycle setup: 2 rear drive wheels, 2 front steering wheels)
+    traction_joints_names: ['left_rear_joint', 'right_rear_joint']
+    steering_joints_names: ['front_steer_left_joint', 'front_steer_right_joint']
+
+    

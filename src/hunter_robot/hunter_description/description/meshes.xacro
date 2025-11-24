@@ -1,49 +1,24 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-  <!-- Macro for visual mesh + primitive collision -->
   <xacro:macro name="mesh" params="name">
-    
-    <!-- Visual: always use your .dae file -->
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
       <geometry>
-        <mesh filename="file://$(find hunter_description)/meshes/${name}.dae"/>
+        <mesh filename="file://$(find hunter_description)/meshes/${name}.dae" />
       </geometry>
     </visual>
-
-    <!-- Collision: replace problematic meshes with simple primitives -->
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
       <geometry>
-
-        <!-- Wheels -->
-        <xacro:if value="${name.find('wheel') != -1}">
-          <!-- radius=0.165, width=0.1 -->
-          <cylinder radius="0.165" length="0.10"/>
-        </xacro:if>
-
-        <!-- Chassis -->
-        <xacro:if value="${name == 'chassis'}">
-          <!-- size = length 0.65 × width 0.58 × height 0.20 -->
-          <box size="0.65 0.58 0.20"/>
-        </xacro:if>
-
-        <!-- Fallback tiny collision (for links like steering) -->
-        <xacro:if value="${name != 'chassis' and name.find('wheel') == -1}">
-          <box size="0.01 0.01 0.01"/>
-        </xacro:if>
-
+        <mesh filename="file://$(find hunter_description)/meshes/${name}.dae" />
       </geometry>
     </collision>
-
   </xacro:macro>
 
-
-  <!-- Invisible virtual part used in your steering links -->
   <xacro:macro name="virtual">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/> 
       <geometry>
         <cylinder length="0.01" radius="0.01"/>
       </geometry>
@@ -53,14 +28,12 @@
     </visual>
   </xacro:macro>
 
-
-  <!-- Friction macro (unchanged) -->
   <xacro:macro name="gazebo_friction" params="reference">
     <gazebo reference="${reference}">
       <mu1 value="1.0"/>
       <mu2 value="0.5"/>
-      <kp value="10000000.0"/>
-      <kd value="1.0"/>
+      <kp value="10000000.0" />
+      <kd value="1.0" />
       <fdir1 value="1 0 0"/>
     </gazebo>
   </xacro:macro>
