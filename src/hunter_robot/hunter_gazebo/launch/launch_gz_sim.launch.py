@@ -91,7 +91,18 @@ def generate_launch_description():
     load_ackermann_controller = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['ackermann_like_controller'],
+        arguments=['ackermann_steering_controller',
+                   '--param-file',
+                   PathJoinSubstitution(
+                    [
+                        FindPackageShare('hunter_description'),
+                        'config',
+                        'ackermann_like_controller.yaml',
+                    ]
+                ),
+                   '--controller-ros-args',
+                   '-r /ackermann_steering_controller/tf_odometry:=/tf',
+                   ],
         output='screen'
     )
 
