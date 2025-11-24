@@ -4,7 +4,7 @@ FROM osrf/ros:jazzy-desktop
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
-# Install dev tools and ROS 2 essentials
+# Install dev tools, ROS 2 essentials, and networking utilities
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     lsb-release \
     gnupg2 \
+    iputils-ping \
+    net-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Install development tools using pip
@@ -30,7 +32,7 @@ ENV LC_ALL=en_US.UTF-8
 # Initialize rosdep
 RUN rosdep init || true && rosdep update
 
-# Install Gazebo Harmonic (gz‑sim) + ROS_GZ vendor packages
+# Install Gazebo Harmonic (gz-sim) + ROS_GZ vendor packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       curl \
@@ -44,6 +46,33 @@ RUN apt-get update && \
     && apt-get update && apt-get install -y --no-install-recommends \
       gz-harmonic \
       ros-jazzy-ros-gz \
+      ros-jazzy-gz-sim-physics-simbody \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install ROS 2 control packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      ros-jazzy-control-msgs \
+      ros-jazzy-ros2-control \
+      ros-jazzy-ros2-controllers \
+      ros-jazzy-joint-state-broadcaster \
+      ros-jazzy-diff-drive-controller \
+      ros-jazzy-joint-state-publisher \
+      ros-jazzy-joint-state-publisher-gui \
+      ros-jazzy-gz-ros2-control \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-jazzy-xacro \
+    ros-jazzy-robot-state-publisher \
+    ros-jazzy-urdf \
+    ros-jazzy-rviz2 \
+    ros-jazzy-ros2controlcli \
+    ros-jazzy-launch \
+    ros-jazzy-rviz2 \
+    ros-jazzy-ament-cmake-pytest \
+    ros-jazzy-launch-testing-ros \
+    liburdfdom-tools \
     && rm -rf /var/lib/apt/lists/*
 
 # Set runtime directory for GUI apps (prevents Qt warning)

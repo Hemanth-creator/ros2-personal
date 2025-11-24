@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:arg name="sim_gazebo" default="classic"/>
+
+<ros2_control name="GazeboSystem" type="system"> <hardware> <plugin>gz_ros2_control/GazeboSimSystem</plugin> </hardware>
+
+
+<!-- Rear wheels -->
+<joint name="rear_left_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="velocity"/>
+  <state_interface name="position"/>
+</joint>
+<joint name="rear_right_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="velocity"/>
+  <state_interface name="position"/>
+</joint>
+
+<!-- Front steering joints -->
+<joint name="front_left_steering_joint">
+  <command_interface name="position"/>
+  <state_interface name="position"/>
+</joint>
+<joint name="front_right_steering_joint">
+  <command_interface name="position"/>
+  <state_interface name="position"/>
+</joint>
+
+<!-- Front wheels -->
+<joint name="front_left_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="velocity"/>
+  <state_interface name="position"/>
+</joint>
+<joint name="front_right_wheel_joint">
+  <command_interface name="velocity"/>
+  <state_interface name="velocity"/>
+  <state_interface name="position"/>
+</joint>
+
+</ros2_control>
+
+<xacro:if value="$(eval sim_gazebo == 'classic')"> <gazebo> <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control"> <parameters>$(find hunter_description)/config/ackermann_like_controller.yaml</parameters> </plugin> </gazebo>
+</xacro:if>
+
+<xacro:if value="$(eval sim_gazebo == 'sim')"> <gazebo> <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin"> <parameters>$(find hunter_description)/config/ackermann_like_controller.yaml</parameters> </plugin> </gazebo>
+</xacro:if>
+
+</robot>

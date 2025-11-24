@@ -6,22 +6,29 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ros2_dev_personal
+
+    # Use host networking to avoid DNS issues
+    network_mode: host
+
     environment:
       # Automatically set DISPLAY for X11
       - DISPLAY=${DISPLAY:-host.docker.internal:0.0}
       - QT_X11_NO_MITSHM=1
+
     volumes:
       - ./src:/home/ros2_ws/src       # Mount your workspace
       # Linux-only X11 socket
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
+    # Keep terminal open
     stdin_open: true
     tty: true
     command: bash
 
-    # Optional: GPU acceleration (Linux)
+    # Optional GPU acceleration (Linux)
     devices:
       - /dev/dri:/dev/dri
 
-    # Extra options for cross-platform
+    # Extra hosts for cross-platform compatibility
     extra_hosts:
       - "host.docker.internal:host-gateway"
