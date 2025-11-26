@@ -3,13 +3,23 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"
   name="hunter2_base">
 
+<material name="Black">
+    <color rgba="0 0 0 1" />
+  </material>
+<material name="Aluminum">
+    <color rgba="0.9 0.9 0.95 1"/>   <!-- base color: very light gray/white -->
+    <specular rgba="0.95 0.95 0.95 1"/> <!-- shiny reflection highlight -->
+    <emission rgba="0 0 0 1"/>         <!-- no self-emission -->
+  </material>
+
+
 <link name="base_link" />
 
   <!-- chassis Link -->
   <link name="chassis">
     <inertial>
       <origin
-        xyz="0.0266989327622036 0.000409203500587652 -0.135901124750884"
+        xyz="0 0 0"
         rpy="0 0 0" />
       <mass
         value="21.02945169536679" />
@@ -26,13 +36,11 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <!-- <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/base_link.STL" /> -->
-        <box size="0.98 0.745 0.38"/> <!-- W x H x D in meters -->
+        <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/base_link.STL" />
+        <!-- <box size="0.98 0.3 0.27"/>  -->
       </geometry>
       <material
-        name="">
-        <color
-          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+        name="Aluminum">
       </material>
     </visual>
     <collision>
@@ -40,23 +48,34 @@
         xyz="0 0 0"
         rpy="0 0 0" />
       <geometry>
-        <box size="0.98 0.745 0.38"/> <!-- W x H x D in meters -->
+        <box size="0.98 0.3 0.27"/>
       </geometry>
     </collision>
   </link>
   <!-- chassis joint -->
   <joint name="chassis_joint" type="fixed">
-    <origin xyz="0.8 0 0.5" rpy="0 0 0" />
+    <origin xyz="0 0 0.37" rpy="0 0 0" />
     <parent link="base_link" />
     <child link="chassis" />
   </joint>
   <!-- rear left wheel Link -->
   <link
     name="left_rear_link">
+    <collision>
+      <geometry>
+        <cylinder radius="0.165" length="0.14"/>
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/left_rear_link.STL" />
+        <!-- <cylinder radius="0.165" length="0.14"/> -->
+      </geometry>
+      <material
+        name="Black">
+      </material>
+    </visual>
     <inertial>
-      <origin
-        xyz="-8.826E-05 6.4342E-05 -0.0096491"
-        rpy="0 0 0" />
       <mass
         value="7.6692" />
       <inertia
@@ -67,51 +86,42 @@
         iyz="0"
         izz="0.11067" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <!-- <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/left_rear_link.STL" /> -->
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-    </collision>
   </link>
-  <!-- rear left  Link -->
+  <!-- rear left  JOINT -->
   <joint
     name="left_rear_joint"
     type="continuous">
     <origin
-      xyz="-0.28 0.29249 -0.19558"
-      rpy="1.5708 0 0" />
+      xyz="-0.28 0.29249 -0.165"
+      rpy="-1.57 0 0" />
     <parent
       link="chassis" />
     <child
       link="left_rear_link" />
     <axis
-      xyz="0 0 -1" />
-     <dynamics damping="0.0" friction="15"/>
+      xyz="0 0 1 "/>
+     <dynamics damping="0" friction="15"/>
   </joint>
+
+
   <!-- right_rear_link -->
   <link
     name="right_rear_link">
+     <collision>
+      <geometry>
+        <cylinder radius="0.165" length="0.14"/>
+      </geometry>
+    </collision>
+     <visual>
+      <geometry>
+        <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/right_rear_link.STL" />
+        <!-- <cylinder radius="0.165" length="0.14"/> -->
+      </geometry>
+      <material
+        name="Black">
+      </material>
+    </visual>
     <inertial>
-      <origin
-        xyz="8.6344E-05 7.4488E-05 0.0097824"
-        rpy="0 0 0" />
       <mass
         value="7.7133" />
       <inertia
@@ -122,51 +132,29 @@
         iyz="0"
         izz="0.11073" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <!-- <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/right_rear_link.STL" /> -->
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-    </collision>
   </link>
+
   <!-- right_rear_join-->
   <joint
     name="right_rear_joint"
     type="continuous">
     <origin
-      xyz="-0.28018 -0.29251 -0.19558"
-      rpy="1.5708 0.0026575 0" />
+      xyz="-0.28018 -0.29251 -0.165"
+      rpy="-1.57 0 0" />
     <parent
       link="chassis" />
     <child
       link="right_rear_link" />
     <axis
-      xyz="0 0 -1" />
-     <dynamics damping="0.0" friction="15"/>
+      xyz="0 0 1 "/>
+     <dynamics damping="0" friction="15"/>
   </joint>
+
+
   <!-- left steer Link -->
   <link
     name="front_steer_left_link">
     <inertial>
-      <origin
-        xyz="-0.012614 1.8116E-05 0.0023132"
-        rpy="0 0 0" />
       <mass
         value="7.8526" />
       <inertia
@@ -177,54 +165,32 @@
         iyz="0"
         izz="0.11091" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-    </collision>
   </link>
+
   <!-- left steer joint -->
   <joint
     name="front_steer_left_joint"
     type="revolute">
     <origin
-      xyz="0.37142 0.29199 -0.1955"
-      rpy="1.5708 0 0" />
+      xyz="0.37142 0.29199 -0.165"
+      rpy="0 0 0" />
     <parent
       link="chassis" />
     <child
       link="front_steer_left_link" />
     <axis
-      xyz="0 1 0" />
+      xyz="0 0 1" />
     <limit
       lower="-0.69"
       upper="0.69"
-      effort="0"
-      velocity="0" />
+      effort="80"
+      velocity="20" />
   </joint>
+
   <!-- right steer Link -->
    <link
     name="front_steer_right_link">
     <inertial>
-      <origin
-        xyz="-8.9374E-08 1.0997E-07 0.0095958"
-        rpy="0 0 0" />
       <mass
         value="7.696" />
       <inertia
@@ -235,54 +201,47 @@
         iyz="0"
         izz="0.11068" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-    </collision>
+    
   </link>
+
   <!-- right steer Joint -->
   <joint
     name="front_steer_right_joint"
     type="revolute">
     <origin
-      xyz="0.37142 -0.29201 -0.1955"
-      rpy="1.5708 0 0" />
+      xyz="0.37142 -0.29201 -0.165"
+      rpy="0 0 0" />
     <parent
       link="chassis" />
     <child
       link="front_steer_right_link" />
     <axis
-      xyz="0 1 0" />
+      xyz="0 0 1" />
     <limit
       lower="-0.69"
       upper="0.69"
-      effort="0"
-      velocity="0" />
+      effort="80.0"
+      velocity="2.0" />
   </joint>
+
 <!-- front left wheel Link -->
   <link
     name="front_left_wheel_link">
+    <collision>
+      <geometry>
+        <cylinder radius="0.165" length="0.14"/> <!-- radius ~ half wheel diameter, length ~ wheel thickness -->
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/front_left_wheel_link.STL" />
+        <!-- <cylinder radius="0.165" length="0.14"/>  -->
+      </geometry>
+      <material
+        name="Black">
+      </material>
+    </visual>
     <inertial>
-      <origin
-        xyz="-6.5774E-06 2.0242E-05 -0.0096386"
-        rpy="0 0 0" />
       <mass
         value="7.7007" />
       <inertia
@@ -293,51 +252,42 @@
         iyz="0"
         izz="0.11072" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <!-- <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/front_left_wheel_link.STL" /> -->
-        <cylinder radius="0.065" length="0.05"/> <!-- radius ~ half wheel diameter, length ~ wheel thickness -->
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <cylinder radius="0.065" length="0.05"/> <!-- radius ~ half wheel diameter, length ~ wheel thickness -->
-      </geometry>
-    </collision>
   </link>
+
   <!-- front left wheel Joint -->
   <joint
     name="front_left_wheel_joint"
     type="continuous">
     <origin
       xyz="0 0 0"
-      rpy="0 0 0" />
+      rpy="-1.57 0 0" />
     <parent
       link="front_steer_left_link" />
     <child
       link="front_left_wheel_link" />
     <axis
-      xyz="0 0 -1" />
-      <dynamics damping="0.0" friction="15"/>
+      xyz="0 0 1 "/>
+      <dynamics damping="0" friction="15"/>
   </joint>
+
   <!-- front right wheel Link -->
   <link
     name="front_right_wheel_link">
+    <collision>
+      <geometry>
+        <cylinder radius="0.165" length="0.14"/>
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/front_left_wheel_link.STL" />
+        <!-- <cylinder radius="0.165" length="0.14"/> -->
+      </geometry>
+      <material
+        name="Black">
+      </material>
+    </visual>
     <inertial>
-      <origin
-        xyz="-9.1148E-08 1.1284E-07 0.0095049"
-        rpy="0 0 0" />
       <mass
         value="7.5613" />
       <inertia
@@ -348,155 +298,24 @@
         iyz="0"
         izz="0.11054" />
     </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 3.14 0" />
-      <geometry>
-        <!-- <mesh filename="file://$(find hunter2_robot)/hunter2_description/meshes/front_left_wheel_link.STL" /> -->
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <cylinder radius="0.065" length="0.05"/>
-      </geometry>
-    </collision>
   </link>
+
   <!-- front right wheel joint -->
   <joint
     name="front_right_wheel_joint"
     type="continuous">
     <origin
       xyz="0 0 0"
-      rpy="0 0 0" />
+      rpy="-1.57 0 0" />
     <parent
       link="front_steer_right_link" />
     <child
       link="front_right_wheel_link" />
     <axis
-      xyz="0 0 -1" />
-      <dynamics damping="0.0" friction="15"/>
+      xyz="0 0 1 " />
+      <dynamics damping="0" friction="15"/>
   </joint>
   
-  
-  <!-- <link
-    name="front_steer_link">
-    <inertial>
-      <origin
-        xyz="0.049836 8.1046E-15 0.017912"
-        rpy="0 0 0" />
-      <mass
-        value="0.0049179" />
-      <inertia
-        ixx="1.6846E-07"
-        ixy="7.6396E-23"
-        ixz="-1.0974E-08"
-        iyy="7.549E-07"
-        iyz="-1.8957E-22"
-        izz="7.334E-07" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.79216 0.81961 0.93333 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="front_steer_joint"
-    type="revolute">
-    <origin
-      xyz="0.44792 -1.1431E-05 -0.121"
-      rpy="0 0 0" />
-    <parent
-      link="chassis" />
-    <child
-      link="front_steer_link" />
-    <axis
-      xyz="0 0 1" />
-    <limit
-      lower="-0.72"
-      upper="0.72"
-      effort="0"
-      velocity="0" />
-  </joint>
-  <link
-    name="rear_wheel_link">
-<inertial>
-      <origin
-        xyz="-0.02 0.0031269 -0.12735"
-        rpy="0 0 0" />
-      <mass
-        value="0.0049179" />
-      <inertia
-        ixx="1.1821E-06"
-        ixy="9.6965E-13"
-        ixz="-3.1553E-12"
-        iyy="9.5276E-07"
-        iyz="1.2428E-08"
-        izz="1.0913E-06" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-      <cylinder length="0.001" radius="0.005"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="rear_wheel_joint"
-    type="continuous">
-    <origin
-      xyz="-0.42408 -1.1431E-05 -0.085581"
-      rpy="0.0032313 0 0" />
-    <parent
-      link="chassis" />
-    <child
-      link="rear_wheel_link" />
-    <axis
-      xyz="0 0 1" />
-    <dynamics damping="0.0" friction="15"/>
-  </joint> -->
-
 <xacro:arg name="sim_gazebo" default="classic"/>
 <ros2_control name="GazeboSystem" type="system"> 
   <hardware> 
@@ -527,20 +346,15 @@
 
 <!-- Front wheels -->
 <joint name="front_left_wheel_joint">
-  <command_interface name="velocity"/>
   <state_interface name="velocity"/>
   <state_interface name="position"/>
 </joint>
 <joint name="front_right_wheel_joint">
-  <command_interface name="velocity"/>
   <state_interface name="velocity"/>
   <state_interface name="position"/>
 </joint>
 
 </ros2_control>
-
-<xacro:if value="$(eval sim_gazebo == 'classic')"> <gazebo> <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control"> <parameters>$(find hunter_description)/config/ackermann_like_controller.yaml</parameters> </plugin> </gazebo>
-</xacro:if>
 
 <xacro:if value="$(eval sim_gazebo == 'sim')"> 
   <gazebo> 
@@ -549,8 +363,5 @@
      </plugin>
   </gazebo>
 </xacro:if>
-
-
-
 
 </robot>

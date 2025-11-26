@@ -36,7 +36,7 @@ def generate_launch_description():
                 'gz_sim.launch.py'
             ])
         ]),
-        launch_arguments={'gz_args': '-r -v 4'}.items()
+        launch_arguments={'gz_args': '-r -v 1 empty.sdf'}.items()
     )
 
     hunter_description_path = os.path.join(

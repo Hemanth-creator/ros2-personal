@@ -24,7 +24,7 @@ ackermann_steering_controller:
     # Frames & odometry
     base_frame_id: base_link
     odom_frame_id: odom
-    enable_odom_tf: false             # Matches your old setup
+    enable_odom_tf: true             # Matches your old setup
 
     # Covariances (for localization fusion)
     twist_covariance_diagonal: [0.0, 7.0, 14.0, 21.0, 28.0, 35.0]
