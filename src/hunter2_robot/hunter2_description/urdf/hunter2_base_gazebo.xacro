@@ -181,8 +181,8 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-0.69"
-      upper="0.69"
+      lower="-0.436"
+      upper="0.436"
       effort="80"
       velocity="20" />
   </joint>
@@ -218,8 +218,8 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-0.69"
-      upper="0.69"
+      lower="-0.436"
+      upper="0.436"
       effort="80.0"
       velocity="2.0" />
   </joint>
@@ -316,6 +316,34 @@
       <dynamics damping="0" friction="15"/>
   </joint>
   
+<gazebo reference="left_rear_link">
+  <mu1>1.2</mu1>        <!-- lateral friction -->
+  <mu2>1.2</mu2>        <!-- longitudinal friction -->
+  <kp>300000</kp>       <!-- contact stiffness -->
+  <kd>3</kd>            <!-- contact damping -->
+</gazebo>
+
+<gazebo reference="right_rear_link">
+  <mu1>1.2</mu1>
+  <mu2>1.2</mu2>
+  <kp>300000</kp>
+  <kd>3</kd>
+</gazebo>
+
+<gazebo reference="front_left_wheel_link">
+  <mu1>1.2</mu1>
+  <mu2>1.2</mu2>
+  <kp>300000</kp>
+  <kd>3</kd>
+</gazebo>
+
+<gazebo reference="front_right_wheel_link">
+  <mu1>1.2</mu1>
+  <mu2>1.2</mu2>
+  <kp>300000</kp>
+  <kd>3</kd>
+</gazebo>
+
 <xacro:arg name="sim_gazebo" default="classic"/>
 <ros2_control name="GazeboSystem" type="system"> 
   <hardware> 

@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install development tools using pip
 RUN pip3 install --break-system-packages -U colcon-common-extensions
 
+
 # Setup locale
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
@@ -73,6 +74,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-jazzy-ament-cmake-pytest \
     ros-jazzy-launch-testing-ros \
     liburdfdom-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+# pointcloud to laser
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-pointcloud-to-laserscan \
     && rm -rf /var/lib/apt/lists/*
 
 # Set runtime directory for GUI apps (prevents Qt warning)

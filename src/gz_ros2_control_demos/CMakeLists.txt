@@ -22,6 +22,7 @@ install(DIRECTORY
   sdf
   urdf
   worlds
+  rviz
   DESTINATION share/${PROJECT_NAME}/
 )
 

@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'twist_bridge'
+package_name = 'teleop_twiststamped'
 
 setup(
     name=package_name,
@@ -24,7 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'twist_bridge = twist_bridge.twist_bridge:main',
+            'teleop_twiststamped_keyboard = teleop_twiststamped.teleop_twiststamped_keyboard:main',
         ],
     },
 )

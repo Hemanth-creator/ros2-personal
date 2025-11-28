@@ -21,6 +21,9 @@ from launch.substitutions import Command, FindExecutable, LaunchConfiguration, P
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
+
+import os
 
 
 def generate_launch_description():
@@ -63,7 +66,7 @@ def generate_launch_description():
         executable='create',
         output='screen',
         arguments=['-topic', 'robot_description', '-name',
-                   'ackermann', '-allow_renaming', 'true'],
+                   'ackermann', '-world', 'hunter','-allow_renaming', 'true'],
     )
 
     joint_state_broadcaster_spawner = Node(
@@ -86,8 +89,34 @@ def generate_launch_description():
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
+                   '/model/mid360/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                   ],
         output='screen'
+    )
+    gazebo_lidar_tf_node = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['0', '0', '0', '0', '0', '0', 'laser_link', 'ackermann/base_link/gpu_lidar'],
+    )
+
+    world_path = os.path.join(
+    get_package_share_directory('gz_ros2_control_demos'),
+    'worlds',
+    'hunter_world.sdf'
+    )
+    print("WORLD PATH:", world_path)
+
+    rviz = Node(
+        package='rviz2',
+        executable='rviz2',
+        arguments=[
+            '-d',
+            os.path.join(os.path.join(
+        get_package_share_directory('gz_ros2_control_demos')), 'rviz/default.rviz'),
+        ],
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     ld = LaunchDescription([
@@ -98,7 +127,7 @@ def generate_launch_description():
                 [PathJoinSubstitution([FindPackageShare('ros_gz_sim'),
                                        'launch',
                                        'gz_sim.launch.py'])]),
-            launch_arguments=[('gz_args', [' -r -v 1 empty.sdf'])]),
+            launch_arguments=[('gz_args', [f' -r -v 1 {world_path}'])]),
         RegisterEventHandler(
             event_handler=OnProcessExit(
                 target_action=gz_spawn_entity,
@@ -111,6 +140,7 @@ def generate_launch_description():
                 on_exit=[ackermann_steering_controller_spawner],
             )
         ),
+    
         gz_spawn_entity,
         # Launch Arguments
         DeclareLaunchArgument(
@@ -121,6 +151,8 @@ def generate_launch_description():
             'description_format',
             default_value='urdf',
             description='Robot description format to use, urdf or sdf'),
+            gazebo_lidar_tf_node,
+            rviz
     ])
     ld.add_action(OpaqueFunction(function=robot_state_publisher))
     return ld

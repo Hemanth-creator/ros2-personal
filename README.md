@@ -17,7 +17,7 @@ you can run your nodes
 
 =================================================
 run this to move the accerman robot in gz_ros2_control_demos
-root@hemanth-ThinkPad-E14-Gen-6:/home/ros2_ws# ros2 topic pub -r 20 /ackermann_steering_controller/reference geometry_msgs/msg/TwistStamped "header:
+ros2 topic pub -r 20 /ackermann_steering_controller/reference geometry_msgs/msg/TwistStamped "header:
   stamp: {sec: 0, nanosec: 0}
   frame_id: 'base_link'
 twist:
