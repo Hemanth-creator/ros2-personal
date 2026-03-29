@@ -183,6 +183,17 @@ docker compose run --gpus all ros2
 ```bash
 docker exec -it ros2_dev_humble bash
 ```
+## Seting alias for entering the cotainer (Recomended)
+```bash
+nano ~/.bashrc
+alias dev_humble='docker exec -it ros2_dev_humble bash'
+source ~/.bashrc
+```
+## enter the container 
+```bash
+dev_humble
+```
+
 
 ## Stop container
 

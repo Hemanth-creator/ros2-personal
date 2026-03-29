@@ -64,6 +64,7 @@ RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 # Source ROS automatically
 # ----------------------------
 RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+RUN echo "if [ -f /home/ros2_ws/install/setup.bash ]; then source /home/ros2_ws/install/setup.bash; fi" >> ~/.bashrc
 
 WORKDIR /home/ros2_ws
 
