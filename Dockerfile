@@ -1,10 +1,11 @@
-# Start from official ROS 2 Jazzy desktop image
-FROM osrf/ros:jazzy-desktop
+FROM osrf/ros:humble-desktop
 
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
-# Install dev tools and ROS 2 essentials
+# ----------------------------
+# Base tools
+# ----------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -15,42 +16,51 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     locales \
     curl \
     wget \
-    lsb-release \
     gnupg2 \
+    lsb-release \
+    mesa-utils \
+    libgl1-mesa-glx \
+    libgl1-mesa-dri \
     && rm -rf /var/lib/apt/lists/*
 
-# Install development tools using pip
-RUN pip3 install --break-system-packages -U colcon-common-extensions
+# ----------------------------
+# Colcon
+# ----------------------------
+RUN pip3 install -U colcon-common-extensions
 
-# Setup locale
+# ----------------------------
+# Locale
+# ----------------------------
 RUN locale-gen en_US.UTF-8
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
-# Initialize rosdep
+# ----------------------------
+# rosdep
+# ----------------------------
 RUN rosdep init || true && rosdep update
 
-# Install Gazebo Harmonic (gz‑sim) + ROS_GZ vendor packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      curl \
-      lsb-release \
-      gnupg2 \
-    && curl -fsSL https://packages.osrfoundation.org/gazebo.gpg \
-         --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \
-         https://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \
-         > /etc/apt/sources.list.d/gazebo-stable.list \
-    && apt-get update && apt-get install -y --no-install-recommends \
-      gz-harmonic \
-      ros-jazzy-ros-gz \
+# ----------------------------
+# Gazebo Classic (gazebo11)
+# ----------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gazebo \
+    gazebo11 \
+    libgazebo11-dev \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-gazebo-ros2-control \
     && rm -rf /var/lib/apt/lists/*
 
-# Set runtime directory for GUI apps (prevents Qt warning)
+# ----------------------------
+# Fix GUI runtime
+# ----------------------------
 RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
-ENV XDG_RUNTIME_DIR=/tmp/runtime-root
 
-# Source ROS 2 setup on container start
-RUN echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
+# ----------------------------
+# Source ROS automatically
+# ----------------------------
+RUN echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+
+WORKDIR /home/ros2_ws
 
 CMD ["bash"]

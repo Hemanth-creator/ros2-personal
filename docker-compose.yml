@@ -5,23 +5,39 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ros2_dev_personal
+    container_name: ros2_dev_humble
+
     environment:
-      # Automatically set DISPLAY for X11
       - DISPLAY=${DISPLAY:-host.docker.internal:0.0}
       - QT_X11_NO_MITSHM=1
+      - XDG_RUNTIME_DIR=/tmp/runtime-root
+
+      # NVIDIA GPU support (ignored if not present)
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+
     volumes:
-      - ./src:/home/ros2_ws/src       # Mount your workspace
-      # Linux-only X11 socket
+      - ./src:/home/ros2_ws/src
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+
     stdin_open: true
     tty: true
+
     command: bash
 
-    # Optional: GPU acceleration (Linux)
+    # NVIDIA GPU support (modern way)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+    # Intel / AMD GPU fallback
     devices:
       - /dev/dri:/dev/dri
 
-    # Extra options for cross-platform
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+    # Improves GUI + GPU stability
+    privileged: true
