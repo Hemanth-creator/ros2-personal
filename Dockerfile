@@ -43,13 +43,17 @@ RUN rosdep init || true && rosdep update
 # ----------------------------
 # Gazebo Classic (gazebo11)
 # ----------------------------
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gazebo \
-    gazebo11 \
-    libgazebo11-dev \
+# Ensure ROS 2 apt sources are configured
+RUN apt-get update && apt-get install -y curl gnupg2 lsb-release \
+    && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | apt-key add - \
+    && echo "deb http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2.list \
+    && apt-get update
+
+# Install specific Gazebo packages for ROS 2 Humble
+RUN apt-get install -y \
     ros-humble-gazebo-ros-pkgs \
-    ros-humble-gazebo-ros2-control \
-    && rm -rf /var/lib/apt/lists/*
+    ros-humble-gazebo-plugins \
+    ros-humble-gazebo-dev
 
 # ----------------------------
 # Fix GUI runtime

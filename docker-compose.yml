@@ -35,6 +35,7 @@ services:
     # Intel / AMD GPU fallback
     devices:
       - /dev/dri:/dev/dri
+      - /dev/snd:/dev/snd
 
     extra_hosts:
       - "host.docker.internal:host-gateway"
