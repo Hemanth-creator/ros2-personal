@@ -55,6 +55,10 @@ RUN apt-get install -y \
     ros-humble-gazebo-plugins \
     ros-humble-gazebo-dev
 
+RUN apt-get update && apt-get install -y \
+    ros-humble-gazebo-ros \
+    && rm -rf /var/lib/apt/lists/*
+
 # ----------------------------
 # Fix GUI runtime
 # ----------------------------
